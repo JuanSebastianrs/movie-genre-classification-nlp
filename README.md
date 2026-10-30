@@ -1,46 +1,55 @@
-# NLP-Based Movie Genre Classification 🎬📚
+# Movie Genre Classification with Sentence Embeddings
 
-This project uses **natural language processing** and **sentence embeddings** to classify movie plot summaries (`overview`) into genres. It was developed as part of the "Machine Learning Applications" course (MACC Master's program, Universidad del Rosario).
+**Predict a movie's genre from its plot summary using sentence embeddings and supervised classifiers.**
 
----
+Academic project from the Machine Learning Applications course in the MACC master's program, Universidad del Rosario.
 
-## 🎯 Objective
+[Experiment notebook](notebook/proyecto.ipynb) · [Project report](report/Proyecto.pdf) · [Data files](data/)
 
-Use the `overview` text field to predict the movie genre via a supervised classification model. The approach includes:
+## Method
 
-- Generating sentence embeddings using `all-MiniLM-L6-v2` (from `sentence-transformers`)
-- Training and evaluating a classifier using scikit-learn models
-- Applying standard NLP preprocessing and dataset curation
+1. Filter movie metadata to non-empty plot summaries and movies with exactly one genre.
+2. Retain the **12 categories defined in the notebook**.
+3. Keep summaries that fit a single token chunk.
+4. Encode text with `sentence-transformers/all-MiniLM-L6-v2`.
+5. Compare Logistic Regression, Linear SVC, Random Forest and MLP classifiers.
+6. Tune on the training partition using stratified cross-validation and evaluate on the held-out test set.
 
----
+The notebook uses an 80/20 stratified train/test split with a fixed random seed and selects models using macro F1.
 
-## 🗃️ Dataset
+## Reported results
 
-We used [The Movies Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset) from Kaggle, which contains metadata for over 45,000 films. Only a subset of columns is used:
+The original project summary reports approximately **0.60 accuracy** and **0.45 F1**. Use the [notebook](notebook/proyecto.ipynb) and [report](report/Proyecto.pdf) for the detailed experiment context.
 
-- `title`
-- `overview` (plot summary)
-- `genres` (filtered to 13 valid categories)
+This is a single-label classification experiment after filtering multi-genre movies, rather than a general multi-label movie tagger.
 
-📂 See [`data/`](./data/) for column descriptions and file list. The full dataset is not included due to size and license constraints.
+## Explore the project
 
----
+```bash
+git clone https://github.com/JuanSebastianrs/movie-genre-classification-nlp.git
+cd movie-genre-classification-nlp
+jupyter lab
+```
 
-## 📈 Results
+Open `notebook/proyecto.ipynb` and use the repository root as the notebook working directory, so that paths to `data/` resolve correctly. The notebook currently uses a Windows-style CSV path.
 
-The final classifier achieved:
+The [requirements file](requirements.txt) is currently empty. Reproduction needs an environment compatible with the notebook imports, including pandas, NumPy, PyTorch, scikit-learn, sentence-transformers, XGBoost and its legacy LangChain text-splitter import. A locked, validated environment specification is still needed for reproducible execution.
 
-- **Accuracy**: ~0.60  
-- **F1-score**: ~0.45  
+## Data
 
-The model performed well for major genres like Drama, Comedy, and Action.
+Source: [The Movies Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset).
 
----
+The repository contains CSV files under [data/](data/), including movie metadata and supporting tables. Consult the upstream dataset's terms before reusing or redistributing them.
 
-## 📁 Repository Structure
+## Layout
 
-```plaintext
-notebook/           # Jupyter notebook for training and testing
-report/             # Formal report in PDF (in Spanish)
-data/               # CSV files (optional, see README.md inside)
-requirements.txt    # List of Python dependencies
+```text
+notebook/proyecto.ipynb  # Data curation, embeddings, model selection and evaluation
+report/Proyecto.pdf     # Academic report in Spanish
+data/                   # Published CSV files
+requirements.txt        # Environment specification still to be completed
+```
+
+## Resumen en español
+
+Clasificación de géneros cinematográficos a partir de sinopsis mediante embeddings y modelos supervisados. El experimento filtra películas a una sola etiqueta y compara clasificadores con validación cruzada estratificada.
